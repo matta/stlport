@@ -1,4 +1,4 @@
-// -*- C++ -*- Time-stamp: <2012-11-23 01:18:49 ptr>
+// -*- C++ -*- Time-stamp: <2013-03-13 09:23:15 ptr>
 
 /*
  * Copyright (c) 2007, 2009-2012
@@ -918,18 +918,18 @@ int EXAM_IMPL(type_traits_test::add_reference)
 {
   EXAM_CHECK( (std::is_same<int&,std::add_lvalue_reference<int>::type>::value) );
   EXAM_CHECK( (std::is_same<int&,std::add_lvalue_reference<int&>::type>::value) );
-  EXAM_CHECK( (std::is_same<int&,std::add_lvalue_reference<int&&>::type>::value) );
+  EXAM_CHECK( (std::is_same<int&&,std::add_lvalue_reference<int&&>::type>::value) );
 
   EXAM_CHECK( (std::is_same<const int&,std::add_lvalue_reference<const int>::type>::value) );
   EXAM_CHECK( (std::is_same<const int&,std::add_lvalue_reference<const int&>::type>::value) );
-  EXAM_CHECK( (std::is_same<const int&,std::add_lvalue_reference<const int&&>::type>::value) );
+  EXAM_CHECK( (std::is_same<const int&&,std::add_lvalue_reference<const int&&>::type>::value) );
 
   EXAM_CHECK( (std::is_same<int&&,std::add_rvalue_reference<int>::type>::value) );
-  EXAM_CHECK( (std::is_same<int&&,std::add_rvalue_reference<int&>::type>::value) );
+  EXAM_CHECK( (std::is_same<int&,std::add_rvalue_reference<int&>::type>::value) );
   EXAM_CHECK( (std::is_same<int&&,std::add_rvalue_reference<int&&>::type>::value) );
 
   EXAM_CHECK( (std::is_same<const int&&,std::add_rvalue_reference<const int>::type>::value) );
-  EXAM_CHECK( (std::is_same<const int&&,std::add_rvalue_reference<const int&>::type>::value) );
+  EXAM_CHECK( (std::is_same<const int&,std::add_rvalue_reference<const int&>::type>::value) );
   EXAM_CHECK( (std::is_same<const int&&,std::add_rvalue_reference<const int&&>::type>::value) );
 
   return EXAM_RESULT;
@@ -950,6 +950,11 @@ int EXAM_IMPL(type_traits_test::result_of)
       char data;
   };
 
+  struct S2
+  {
+      double operator()( int& );
+  };
+
   typedef void (S::*PMF)(long) const;
   typedef char S::*PMD;
 
@@ -960,6 +965,7 @@ int EXAM_IMPL(type_traits_test::result_of)
   EXAM_CHECK( (std::is_same<std::result_of<S(int)>::type, short>::value) );
   EXAM_CHECK( (std::is_same<std::result_of<S&(unsigned char, const int&)>::type, double>::value) );
   EXAM_CHECK( (std::is_same<std::result_of<S&(unsigned char, int&)>::type, double>::value) );
+  EXAM_CHECK( (std::is_same<std::result_of<S2&(int&)>::type, double>::value) );
 
   EXAM_CHECK( (std::is_same<std::result_of<PF1()>::type, bool>::value) );
   EXAM_CHECK( (std::is_same<std::result_of<PMF(std::unique_ptr<S>, int)>::type, void>::value) );

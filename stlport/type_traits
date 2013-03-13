@@ -1,4 +1,4 @@
-// -*- C++ -*- Time-stamp: <2012-11-23 00:59:54 ptr>
+// -*- C++ -*- Time-stamp: <2013-03-13 00:23:12 ptr>
 
 /*
  * Copyright (c) 2007, 2008, 2010-2011
@@ -833,7 +833,19 @@ template <class Fn, class ... Args> struct remove_reference<Fn&&(Args...)>;
 template <class _Tp>
 struct add_lvalue_reference
 {
-    typedef typename remove_reference<_Tp>::type& type;
+    typedef _Tp& type;
+};
+
+template <class _Tp>
+struct add_lvalue_reference<_Tp&>
+{
+    typedef _Tp& type;
+};
+
+template <class _Tp>
+struct add_lvalue_reference<_Tp&&>
+{
+    typedef _Tp&& type;
 };
 
 #ifdef _STLP_CPP_0X
@@ -841,7 +853,7 @@ struct add_lvalue_reference
 template <class _Tp>
 struct add_rvalue_reference
 {
-    typedef typename remove_reference<_Tp>::type&& type;
+    typedef _Tp&& type;
 };
 
 template <class _Tp>

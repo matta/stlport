@@ -87,18 +87,18 @@ namespace rel_ops {
 #ifdef _STLP_CPP_0X
 
 template <class T>
-inline T&& forward( typename _STLP_STD::remove_reference<T>::type& t ) throw() // noexcept
+inline T&& forward( typename _STLP_STD::remove_reference<T>::type& t ) noexcept
 { return static_cast<T&&>(t); }
 
 template <class T>
-inline T&& forward( typename _STLP_STD::remove_reference<T>::type&& t ) throw() // noexcept
+inline T&& forward( typename _STLP_STD::remove_reference<T>::type&& t ) noexcept
 {
-  _STLP_STATIC_ASSERT( !_STLP_STD::is_lvalue_reference<T>::value )
+  static_assert /* _STLP_STATIC_ASSERT */ ( !_STLP_STD::is_lvalue_reference<T>::value, "lvalue not allowed here" );
   return static_cast<T&&>(t);
 }
 
 template <class T>
-inline typename remove_reference<T>::type&& move( T&& t ) throw() // noexcept
+inline typename remove_reference<T>::type&& move( T&& t ) noexcept
 { return static_cast<typename remove_reference<T>::type&&>(t); }
 
 //template <class T>

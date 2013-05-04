@@ -1,7 +1,7 @@
-// -*- C++ -*- Time-stamp: <2012-12-29 21:44:10 ptr>
+// -*- C++ -*- Time-stamp: <2013-05-04 18:01:40 ptr>
 
 /*
- * Copyright (c) 2004-2009
+ * Copyright (c) 2004-2013
  * Petr Ovtchenkov
  *
  * Copyright (c) 2004-2008
@@ -22,6 +22,7 @@
 
 #include <algorithm>
 #include <functional>
+#include <stl/_bind.h>
 
 #if !defined (STLPORT) || defined(_STLP_USE_NAMESPACES)
 using namespace std;
@@ -139,5 +140,151 @@ int EXAM_IMPL(bind_test::bind_memfn)
 
   EXAM_CHECK( array[0].v() == 12 );
 
+  return EXAM_RESULT;
+}
+
+int func_plus_2( int v )
+{
+  return v + 2;
+}
+
+int func_plus_2_mod( int v, int d )
+{
+  return (v + 2) % d;
+}
+
+int func_plus_2_mod_ref( const int& v, const int& d )
+{
+  return (v + 2) % d;
+}
+
+int EXAM_IMPL(bind_test::bind_core)
+{
+  EXAM_CHECK( (bind( func_plus_2, 1 )() == 3) );
+  EXAM_CHECK( (bind( func_plus_2_mod, 1, std::placeholders::_1 )(2) == 1) );
+  EXAM_CHECK( (bind( func_plus_2_mod_ref, 1, std::placeholders::_1 )(2) == 1) );
+  EXAM_CHECK( (bind( func_plus_2_mod_ref, std::placeholders::_1, 2 )(1) == 1) );
+#if 0
+  {
+    tuple<int,std::placeholders::detail::placeholder<1> > t(1,std::placeholders::_1);
+    tuple<const int&,std::placeholders::detail::placeholder<1> > t1(1,std::placeholders::_1);
+
+    cerr << std::detail::_get_tuple_or_arg<0,0,tuple<int,std::placeholders::detail::placeholder<1> >,int>::get( std::forward<tuple<int,std::placeholders::detail::placeholder<1> > >(t), 2 ) << endl;
+
+    cerr << std::detail::_get_tuple_or_arg<1,1,tuple<int,std::placeholders::detail::placeholder<1> >,int>::get( std::forward<tuple<int,std::placeholders::detail::placeholder<1> > >(t), 2 ) << endl;
+
+    cerr << std::detail::_get_tuple_or_arg<1,1,tuple<const int&,std::placeholders::detail::placeholder<1> >,const int&>::get( std::forward<tuple<const int&,std::placeholders::detail::placeholder<1> > >(t), 2 ) << endl;
+
+    cerr << func_plus_2_mod(
+      std::detail::_get_tuple_or_arg<is_placeholder<
+                      typename tuple_element<0,tuple<int,std::placeholders::detail::placeholder<1> > >::type>::value
+      ,0,tuple<int,std::placeholders::detail::placeholder<1> >,int>::get( std::forward<tuple<int,std::placeholders::detail::placeholder<1> > >(t), 2 ),
+      std::detail::_get_tuple_or_arg<is_placeholder<
+                      typename tuple_element<1,tuple<int,std::placeholders::detail::placeholder<1> > >::type>::value
+      ,1,tuple<int,std::placeholders::detail::placeholder<1> >,int>::get( std::forward<tuple<int,std::placeholders::detail::placeholder<1> > >(t), 2 )
+      )
+<< endl;
+  }
+#endif
+  {
+    int array [3] = { 1, 2, 3 };
+    int* p = remove_if((int*)array, (int*)array + 3, bind(less<int>(), 2, std::placeholders::_1));
+
+    EXAM_CHECK(p == &array[2]);
+    EXAM_CHECK(array[0] == 1);
+    EXAM_CHECK(array[1] == 2);
+
+    for_each((int*)array, (int*)array + 3, bind(pre_increment(), 1, std::placeholders::_1));
+    EXAM_CHECK(array[0] == 2);
+    EXAM_CHECK(array[1] == 3);
+    EXAM_CHECK(array[2] == 4);
+
+    for_each((int*)array, (int*)array + 3, bind(post_increment(), std::placeholders::_1, 1));
+    EXAM_CHECK(array[0] == 3);
+    EXAM_CHECK(array[1] == 4);
+    EXAM_CHECK(array[2] == 5);
+  }
+
+  {
+    int array [3] = { 1, 2, 3 };
+    replace_if(array, array + 3, bind(less<int>(), 2, std::placeholders::_1), 4);
+
+    EXAM_CHECK(array[0]==1);
+    EXAM_CHECK(array[1]==2);
+    EXAM_CHECK(array[2]==4);
+  }
+
+  { // same as above, just with lambda
+    int array [3] = { 1, 2, 3 };
+    replace_if(array, array + 3, bind([](int l, int r) { return l < r; }, 2, std::placeholders::_1), 4);
+
+    EXAM_CHECK(array[0]==1);
+    EXAM_CHECK(array[1]==2);
+    EXAM_CHECK(array[2]==4);
+  }
+
+  {
+    int array [3] = { 1, 2, 3 };
+    replace_if(array, array + 3, bind(greater<int>(), std::placeholders::_1, 2), 4);
+
+    EXAM_CHECK(array[0]==1);
+    EXAM_CHECK(array[1]==2);
+    EXAM_CHECK(array[2]==4);
+  }
+
+  {
+    int array[3] = { 1, 2, 3 };
+    // bind(ptr_fun(test_func1), std::placeholders::_1, 1);
+
+    /* test_func1 accept const int&, so I can't write here rvalue?
+       or this is due to a copy of binder<> not well iplemented?
+     */
+    const int j = 1;
+    const int k = -1;
+    transform(array, array + 3, array, bind(ptr_fun(test_func1), std::placeholders::_1, j));
+    transform(array, array + 3, array, bind(ptr_fun(test_func1), k, std::placeholders::_1 ));
+    // transform(array, array + 3, array, bind(ptr_fun(test_func1), std::placeholders::_1, 1));
+    // transform(array, array + 3, array, bind(ptr_fun(test_func1), -1, std::placeholders::_1 ));
+    EXAM_CHECK(array[0] == 1);
+    EXAM_CHECK(array[1] == 2);
+    EXAM_CHECK(array[2] == 3);
+
+    transform(array, array + 3, array, bind(ptr_fun(test_func2), std::placeholders::_1, 10));
+    EXAM_CHECK(array[0] == 21);
+    EXAM_CHECK(array[1] == 22);
+    EXAM_CHECK(array[2] == 23);
+  }
+
+  {
+    A array[3];
+
+    for_each( array, array + 3, bind( mem_fun_ref(&A::f), std::placeholders::_1, 12 ) );
+
+    EXAM_CHECK( array[0].v() == 12 );
+  }
+
+  
+  return EXAM_RESULT;
+}
+
+/* Check that bind with explicit specification of function/functor
+   return type is correct 
+ */
+int EXAM_IMPL(bind_test::bind_ret_convert)
+{
+  struct S {
+    static double x_less( int a, int b )
+    { return a < b ? 1.1 : 0.0; }
+  };
+
+  {
+    int array [3] = { 1, 2, 3 };
+    replace_if(array, array + 3, bind<int,double (*)(int,int),int>(S::x_less, 2, std::placeholders::_1), 4);
+
+    EXAM_CHECK(array[0]==1);
+    EXAM_CHECK(array[1]==2);
+    EXAM_CHECK(array[2]==4);
+  }
+  
   return EXAM_RESULT;
 }

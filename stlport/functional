@@ -430,6 +430,17 @@ struct is_placeholder<const placeholders::detail::placeholder<Nm> > :
     public integral_constant<int,Nm>
 { };
 
+template <int Nm>
+struct is_placeholder<const placeholders::detail::placeholder<Nm>& > :
+    public integral_constant<int,Nm>
+{ };
+
+_STLP_END_NAMESPACE
+
+// --- include <stl/_bind.h>
+
+_STLP_BEGIN_NAMESPACE
+
 template <class _Operation>
 class binder1st :
     public unary_function<typename _Operation::second_argument_type, typename _Operation::result_type>

@@ -1,4 +1,4 @@
-// -*- C++ -*- Time-stamp: <10/06/02 15:17:35 ptr>
+// -*- C++ -*- Time-stamp: <2013-05-04 10:27:31 ptr>
 
 /*
  * Copyright (c) 2004-2009
@@ -33,6 +33,8 @@ class bind_test
     int EXAM_DECL(bind2nd2);
     int EXAM_DECL(bind2nd3);
     int EXAM_DECL(bind_memfn);
+    int EXAM_DECL(bind_core);
+    int EXAM_DECL(bind_ret_convert);
 };
 
 #endif // __TEST_BIND_TEST_H

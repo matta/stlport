@@ -1,4 +1,4 @@
-// -*- C++ -*- Time-stamp: <2012-11-28 10:31:50 ptr>
+// -*- C++ -*- Time-stamp: <2013-05-04 10:31:40 ptr>
 
 /*
  * Copyright (c) 2008-2011
@@ -74,6 +74,7 @@
 #include "null_ptr.h"
 #include "thread_test.h"
 #include "atomic_test.h"
+#include "tuple_test.h"
 
 int main( int argc, const char** argv )
 {
@@ -636,6 +637,8 @@ int main( int argc, const char** argv )
   t.add( &bind_test::bind2nd2, bn_test, "bind2nd2" );
   t.add( &bind_test::bind2nd3, bn_test, "bind2nd3" );
   t.add( &bind_test::bind_memfn, bn_test, "bind_memfn" );
+  t.add( &bind_test::bind_ret_convert, bn_test, "bind convert return type",
+     t.add( &bind_test::bind_core, bn_test, "bind core" ) );
 
   count_test cn_test;
 
@@ -982,6 +985,13 @@ int main( int argc, const char** argv )
   t.add( &thread_test::condition_var, test_thr, "condition_variable", thr_tc, thr_tc + 2 );
   t.add( &thread_test::timed_mutex, test_thr, "timed_mutex", thr_tc, thr_tc + 3 );
   t.add( &thread_test::try_lock, test_thr, "try_lock", thr_tc, thr_tc + 3 );
+
+  tuple_test test_tuple;
+  exam::test_suite::test_case_type tuple_tc[5];
+
+  t.add( &tuple_test::tuple_cv, test_tuple, "tuple cv issues",
+    tuple_tc[0] = t.add( &tuple_test::internals, test_tuple, "tuple under development" ) );
+  t.add( &tuple_test::tuple_ctor, test_tuple, "tuple ctors", tuple_tc[0] );
 
   if ( opts.is_set( 'l' ) ) {
     t.print_graph( std::cout );

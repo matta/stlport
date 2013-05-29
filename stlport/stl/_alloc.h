@@ -63,6 +63,8 @@
 
 _STLP_BEGIN_NAMESPACE
 
+struct allocator_arg_t { };
+
 // 20.6.3, pointer traits
 template <class Ptr> struct pointer_traits;
 // template <class T> struct pointer_traits<T*>;

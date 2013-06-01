@@ -13,6 +13,7 @@ class allocator_test
     int EXAM_DECL(per_thread_alloc);
     int EXAM_DECL(rebind_alloc);
     int EXAM_DECL(incomplete);
+    int EXAM_DECL(uses_allocator);
 };
 
 class memory_test

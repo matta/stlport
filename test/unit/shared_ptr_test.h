@@ -1,4 +1,4 @@
-// -*- C++ -*- Time-stamp: <2011-12-02 10:31:27 ptr>
+// -*- C++ -*- Time-stamp: <2013-06-01 19:51:17 ptr>
 
 /*
  * Copyright (c) 2011
@@ -26,7 +26,6 @@ class memory1_test
 {
   public:
     int EXAM_DECL(align);
-    int EXAM_DECL(uses_allocator);
     int EXAM_DECL(pointer_traits);
 };
 

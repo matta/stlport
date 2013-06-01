@@ -1,4 +1,4 @@
-// -*- C++ -*- Time-stamp: <2013-05-04 10:31:40 ptr>
+// -*- C++ -*- Time-stamp: <2013-06-01 19:54:52 ptr>
 
 /*
  * Copyright (c) 2008-2011
@@ -794,6 +794,7 @@ int main( int argc, const char** argv )
   t.add( &allocator_test::bad_alloc_test, al_test, "bad_alloc_test" );
   t.add( &allocator_test::per_thread_alloc, al_test, "per_thread_alloc" );
   t.add( &allocator_test::rebind_alloc, al_test, "rebind alloc" );
+  t.add( &allocator_test::uses_allocator, al_test, "uses_allocator" );
 
   memory_test mem_test;
   t.add( &memory_test::auto_ptr_test, mem_test, "memory_test::auto_ptr_test" );
@@ -903,7 +904,6 @@ int main( int argc, const char** argv )
   memory1_test m1_test;
   t.add( &memory1_test::pointer_traits, m1_test, "pointer_traits" );
   t.add( &memory1_test::align, m1_test, "align" );
-  t.add( &memory1_test::uses_allocator, m1_test, "uses_allocator" );
 
   exam::test_suite::test_case_type shp_tc[10];
 

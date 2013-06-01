@@ -1,4 +1,4 @@
-// -*- C++ -*- Time-stamp: <2012-03-27 14:26:35 ptr>
+// -*- C++ -*- Time-stamp: <2013-06-01 19:53:46 ptr>
 
 /*
  * Copyright (c) 2011
@@ -121,35 +121,6 @@ struct x_selector
 };
 
 } // namespace shared_ptr_test_ns
-
-int EXAM_IMPL(memory1_test::uses_allocator)
-{
-  struct A
-  {
-  };
-
-  struct AA
-  {
-  };
-
-  struct AAA :
-    public AA
-  {
-  };
-
-  struct B
-  {
-      typedef AA allocator_type;
-  };
-
-  EXAM_CHECK( (std::uses_allocator<A,AA>::value == false) );
-  EXAM_CHECK( (std::uses_allocator<A,AAA>::value == false) );
-  EXAM_CHECK( (std::uses_allocator<B,AA>::value == true) );
-  EXAM_CHECK( (std::uses_allocator<B,AAA>::value == true) );
-  EXAM_CHECK( (std::uses_allocator<B,A>::value == false) );
-
-  return EXAM_RESULT;
-}
 
 namespace shared_ptr_test_ns {
 

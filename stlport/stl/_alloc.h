@@ -65,6 +65,8 @@ _STLP_BEGIN_NAMESPACE
 
 struct allocator_arg_t { };
 
+constexpr allocator_arg_t allocator_arg = allocator_arg_t();
+
 // 20.6.3, pointer traits
 template <class Ptr> struct pointer_traits;
 // template <class T> struct pointer_traits<T*>;
@@ -386,11 +388,6 @@ struct uses_allocator :
     public detail::__uses_allocator_aux<T,Alloc,is_same<true_type,decltype(detail::__has_type_selector::__test_a<T>(0))>::value>
 {
 };
-
-struct allocator_arg_t
-{ };
-
-constexpr allocator_arg_t allocator_arg = allocator_arg_t();
 
 template <class Alloc>
 struct allocator_traits

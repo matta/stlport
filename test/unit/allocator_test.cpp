@@ -255,6 +255,35 @@ int EXAM_IMPL(allocator_test::incomplete)
   return EXAM_RESULT;
 }
 
+int EXAM_IMPL(allocator_test::uses_allocator)
+{
+  struct A
+  {
+  };
+
+  struct AA
+  {
+  };
+
+  struct AAA :
+    public AA
+  {
+  };
+
+  struct B
+  {
+      typedef AA allocator_type;
+  };
+
+  EXAM_CHECK( (std::uses_allocator<A,AA>::value == false) );
+  EXAM_CHECK( (std::uses_allocator<A,AAA>::value == false) );
+  EXAM_CHECK( (std::uses_allocator<B,AA>::value == true) );
+  EXAM_CHECK( (std::uses_allocator<B,AAA>::value == true) );
+  EXAM_CHECK( (std::uses_allocator<B,A>::value == false) );
+
+  return EXAM_RESULT;
+}
+
 #if !defined (_STLP_MSVC) || (_STLP_MSVC >= 1310)
 auto_ptr<int> CreateAutoPtr(int val)
 { return auto_ptr<int>(new int(val)); }

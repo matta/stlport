@@ -386,22 +386,22 @@ template <class... Types>
 class tuple_size;
 
 template <class... Types>
-class tuple_size<class tuple<Types...> > :
+class tuple_size<tuple<Types...> > :
     public integral_constant<size_t,sizeof...(Types)>
 { };
 
 template <class... Types>
-class tuple_size<class const tuple<Types...> > :
+class tuple_size<const tuple<Types...> > :
     public integral_constant<size_t,sizeof...(Types)>
 { };
 
 template <class... Types>
-class tuple_size<class volatile tuple<Types...> > :
+class tuple_size<volatile tuple<Types...> > :
     public integral_constant<size_t,sizeof...(Types)>
 { };
 
 template <class... Types>
-class tuple_size<class const volatile tuple<Types...> > :
+class tuple_size<const volatile tuple<Types...> > :
     public integral_constant<size_t,sizeof...(Types)>
 { };
 
